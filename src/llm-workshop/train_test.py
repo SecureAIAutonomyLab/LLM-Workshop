@@ -3,8 +3,6 @@ import transformers
 from transformers import Trainer
 from dataclasses import dataclass, field
 from typing import Optional
-import warnings
-warnings.filterwarnings("ignore")
 
 
 @dataclass
