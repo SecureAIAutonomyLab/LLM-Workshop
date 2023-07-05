@@ -47,9 +47,7 @@ def train():
         use_fast=False,
     )
 
-    print(data_args)
-
-    dataset = load_dataset(**data_args)
+    dataset = load_dataset(data_args.data_path)
 
     def tokenize_function(example_batch):
         return tokenizer(example_batch['text'], truncation=True, padding='max_length', max_length=512)
