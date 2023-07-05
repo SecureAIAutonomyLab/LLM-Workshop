@@ -1,9 +1,9 @@
 #!/bin/bash
 
 
-torchrun --nproc_per_node=8 --master_port=2345 ../src/deepspeed/train.py \
-    --model_name_or_path ../llama-65b-hf \
-    --data_path ../data/alpaca_gpt4_data.json \
+torchrun --nproc_per_node=8 --master_port=2345 ../src/llm-workshop/train_test.py \
+    --model_name_or_path ../llama-7b-hf \
+    --data_path vicgalle/alpaca-gpt4 \
     --output_dir ../training_output1 \
     --num_train_epochs 3 \
     --per_device_train_batch_size 4 \
