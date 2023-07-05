@@ -53,12 +53,13 @@ def train():
 
     dataset = load_dataset(data_args.data_path, split='train')
 
+    print(dataset[0])
+
+
     def tokenize_function(example_batch):
         return tokenizer(example_batch['text'], truncation=True, padding='max_length', max_length=512)
 
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
-
-    print(training_args)
 
     trainer = Trainer(model=model, tokenizer=tokenizer,
                       args=training_args, train_dataset=tokenized_dataset)
