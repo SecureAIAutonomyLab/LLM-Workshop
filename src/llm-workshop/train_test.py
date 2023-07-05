@@ -47,6 +47,8 @@ def train():
         use_fast=False,
     )
 
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+
     dataset = load_dataset(data_args.data_path)
 
     def tokenize_function(example_batch):
