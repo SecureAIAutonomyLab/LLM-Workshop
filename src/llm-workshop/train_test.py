@@ -56,8 +56,10 @@ def train():
 
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
+    print(training_args)
+
     trainer = Trainer(model=model, tokenizer=tokenizer,
-                      args=training_args, train_dataset=tokenized_dataset, eval_dataset=None)
+                      args=training_args, train_dataset=tokenized_dataset)
 
     trainer.train()
     trainer.save_state()
