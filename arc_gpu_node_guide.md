@@ -1,49 +1,21 @@
-# Arc Video Guide
+# Arc Guide - Setting up ARC for batch jobs
 
-https://youtu.be/PXJh-3_tDX0
-
-1. Create a conda environment for your repo
-2. Export your env to a `environment.yml`
-3. Log in to arc & grab GPU node.
-4. Download your code from github
-5. Create environment from `environment.yml`
-6. Run code.
-7. A note on using branching in git
-
-# Logging into arc and starting an interactive session with a single v100 GPU node
+## Logging into arc and starting an interactive session
 ```bash
 ssh abc123@arc.utsa.edu
-srun -p gpu1v100 -n 1 -t 01:30:00 -c 40 --pty bash
-
-# make sure your code goes to /work/abc123 dir (it can also goto /home/abc123 if you want)
-# but your data MUST go to /work/abc123
-cd /work/abc123
-
-git clone https://github.com/SecureAIAutonomyLab/python-package.git
-cd python-package # you will now be ready to set up a conda environment
+# Grab a compute node, might as well make the next steps faster.
+srun -p compute1 -n 1 -t 02:00:00 -c 4 --pty bash
 ```
 
-# Creating new conda environment, and then installing what you need manually
-```bash
-conda create -n my_env python=3.10
+Note: To conclude this interactive session and release the resources, simply type exit.
 
-conda activate ./env
+You have access to two primary directories: /home/abc123 and /work/abc123.
 
-# install pytorch, go here for other versions (https://pytorch.org/get-started/locally/)
-# The following are needed for this example.
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
-conda install -c huggingface transformers
-conda install -c conda-forge datasets
+1. /home/abc123: Suitable for lightweight packages and any data you wish to retain long-term. However, please be aware that the storage capacity in this directory is capped at 25GB.
 
-# install any other dependies with conda, if they don't exist, you can use pip install instead
-# limit the use of pip install unelss it is necessary. If you have a requirements.txt you can do the following
+2. /work/abc123: This directory offers considerably more storage space, essentially unlimited. However, any data that remains unused for 30 days is subject to deletion. Utilize this directory for the bulk of your data processing and storage needs.
 
-pip install -r requirements.txt # okay to do, but try to avoid
-
-conda env export > environment.yml
-
-```
-# Installing miniconda on /home/abc123
+## Installing miniconda on /home/abc123
 ```bash
 # The miniconda install will persist in your home directory, you need only do this once
 mkdir -p ~/miniconda3 && \
@@ -52,77 +24,41 @@ bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 && \
 rm -rf ~/miniconda3/miniconda.sh && \
 ~/miniconda3/bin/conda init bash && \
 exec bash
-
-# Need to run this everytime you log in, unelss you add the export to your ~/.bashrc
-# Important to avoid exceeding disk quota
-export CONDA_PKGS_DIRS=/work/zwe996/.conda/pkgs && \
-mkdir -p /work/zwe996/.conda/pkgs
 ```
+The above code will do the following: (copy and paste all of it together)  
+1. Download the latest miniconda installation script.
+2. Execute and then delete that script.
+3. Initializes conda for your shell.
+4. Restarts your terminal to apply the base conda environment
 
-# In general, if you run into a `disk quota exceed` error it just means you need to change an environment variable.
+Before installing any packages with Conda, it's important to configure it to use your work directory for package caching. This helps in avoiding potential issues due to storage limitations in your home directory.
 
-For example, anytime you download very large models or datasets, you will likely have to make a change to avoid too much data being temporarily cached in your home directory
+To ensure that these settings are automatically applied every time you log in, you should add the relevant environment variables to your .bashrc file. Here’s how you can do this:
 
+1. Open your .bashrc file with the nano text editor:
 ```bash
-# Need to run this everytime you log in, unelss you add the export to your ~/.bashrc
-export HF_HOME=/work/zwe996/.cache/huggingface && \
-mkdir -p /work/zwe996/.cache/huggingface
+nano ~./bashrc
 ```
 
-
-# Creating existing conda environment from `environment.yml` file
-Use this section if you already have a conda `environment.yml` file that specifys all your dependencies
-
+2. Scroll down to the bottom of the file and add the following lines:
 ```bash
-conda env create --prefix ./env --file environment.yml
-
-conda activate ./env
-
+export CONDA_PKGS_DIRS=/work/abc123/.conda/pkgs
+export HF_HOME=/work/abc123/.cache
+export TORCH_EXTENSIONS_DIR=/work/abc123/.cache
 ```
+3. Press Ctrl + X, then press Y, and finally press Enter to save the changes and exit the editor.
 
-Now your environment is set up, and you are ready to run your code.
+This ensures that Conda uses the specified directory in your work space for package caching, and that HuggingFace and PyTorch use the appropriate directories for their cache data as well.
 
-# Guide for Slurm Scripting
+## Reasoning for exports (skip if you don't need the details): 
+When using HuggingFace, PyTorch, and DeepSpeed, these libraries default to storing cache data in your home directory. On ARC, this can lead to a `disk quota exceed` error due to the accumulation of cache data, especially with libraries that either require Just-In-Time (JIT) compilation (such as DeepSpeed) or involve large downloads (such as HuggingFace).
 
-For long-running jobs, you may want to consider using a slurm script. However, before using a slurm script, you should make sure to set up your computing environment in an interactive session (as shown above with `srun`) to make sure that your code will run (set up your conda environment, move your data to `/work/abc`, etc).
+To avoid running into this error, it is advisable to redirect the cache storage to a directory with more available space. This can typically be achieved by setting environment variables specific to each library.
 
-Below is a sample script which covers the following steps:
+If you have already redirected the cache storage and still encounter the disk quota exceed error, it is likely that another package is still writing cache data to your home directory. In such cases, you should investigate other packages in your workflow that might be contributing to disk space usage.
 
-1. Requests resources from Slurm
-2. Activates a conda environment
-3. Executes Python code
 
-Example `job_script.slurm`
-```bash
-#!/bin/bash
-#SBATCH --job-name=python_job       # Create a short name for your job, required
-#SBATCH --nodes=1                   # Number of nodes, required
-#SBATCH --ntasks=40                 # Number of CPU cores to use, required
-#SBATCH --time=01:00:00             # Time limit hrs:min:sec, required
-#SBATCH --output myjob.o%j          # Name of the stdout output file, required
-#SBATCH --error myjob.e%j           # Name of stderr error file 
-#SBATCH --partition=gpu1v100        # Specify the name of the GPU partition, required
-
-eval "$(conda shell.bash hook)"
-conda activate /work/abc123/my_env/  # Activate your conda environment from dir
-export HF_HOME=/work/abc123/.cache/huggingface # You may not need to do these exports
-export CONDA_PKGS_DIRS=/work/abc123/.conda/pkgs # Only if you're having disk quota exceeded errors
-
-python /work/abc123/python-package/script.py      # Execute your Python script
-```
-run the script by doing:
-
-`[abc123@login003 ~]$ sbatch job_script.slurm`
-
-Once you've started the job, see more documentation here to view its progress.
-
-https://hpcsupport.utsa.edu/foswiki/pub/ARC/WebHome/Running_Jobs_On_Arc.pdf
-
-# Arc Documentation Link
-
-https://hpcsupport.utsa.edu/foswiki/bin/view/ARC/WebHome
-
-# Allowed GPUs
+## Allowed GPUs
 
 | Name        | GPU Node Name |
 | ----------- | ----------- |
@@ -131,8 +67,68 @@ https://hpcsupport.utsa.edu/foswiki/bin/view/ARC/WebHome
 | paul_young   | gpu2v100, gpu1v100		|
 | isaac_corley   | gpu4v100	|
 | mazal_bethany   | gpu2v100, gpu1v100	|
-| emet_bethany   | gpu2v100, gpu1v100		|
-| rinu_joseph   | gpu1v100	|
-| ana_nhunez   | gpu1v100	|
-| javier_quiros   | gpu1v100	|
-| abdalwahab_almajed   | Off	|
+| emet_bethany   | gpu2v100, gpu1v100	|
+
+
+## Grab a GPU Node
+
+```bash
+srun -p gpu1v100 -n 1 -t 01:00:00 -c 40 --pty bash
+```
+
+### More Arc Documentation Link
+
+https://hpcsupport.utsa.edu/foswiki/bin/view/ARC/WebHome
+
+
+# Guide to Setting Up SSH Keys for GitHub on HPC Environment (ARC)
+
+This guide assumes that you are already logged into the HPC environment and will walk you through generating an SSH key, configuring SSH to use this key for GitHub, and adding the key to your GitHub account.
+
+### Step 1: Generate an SSH Key on ARC
+
+Generate a new SSH key with the name "arc_key" by running the following command:
+
+```bash
+ssh-keygen -t ed25519 -C "arc_ssh_key_label" -f ~/.ssh/arc_key
+```
+
+### Step 2: Create SSH Config File on ARC
+Create a new SSH configuration file by using nano:
+
+```bash
+nano ~/.ssh/config
+```
+
+copy in this text
+
+```bash
+Host github.com
+  HostName github.com
+  IdentityFile ~/.ssh/arc_key
+  User git
+```
+
+This configuration tells SSH to use the "arc_key" private key when connecting to GitHub.
+
+Press CTRL + X to exit, and then Y to save the changes, then Enter.
+
+### Step 3: Add SSH Key to GitHub
+First, copy the contents of the public key to your clipboard:
+
+```bash
+cat ~/.ssh/arc_key.pub
+```
+
+1. Navigate to GitHub: Open your web browser and go to GitHub.
+
+
+2. Access Settings: Click on your profile picture in the upper-right corner of the GitHub page and select "Settings" from the dropdown menu.
+
+3. Go to SSH and GPG keys: In the left sidebar of the Settings page, click on "SSH and GPG keys".
+
+4. Add a New SSH Key: Click on the "New SSH key" button.
+
+5. Enter Title and public Key that you copied earlier (exactly as it's shown in your terminal):
+
+6. Test the Connection (optional): You can test the connection to GitHub by using the following command in your terminal or command line interface. `ssh -T git@github.com`
