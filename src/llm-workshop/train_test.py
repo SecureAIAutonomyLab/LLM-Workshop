@@ -49,7 +49,7 @@ def train():
 
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 
-    dataset = load_dataset(data_args.data_path)
+    dataset = load_dataset(data_args.data_path, split='train')
 
     def tokenize_function(example_batch):
         return tokenizer(example_batch['text'], truncation=True, padding='max_length', max_length=512)
