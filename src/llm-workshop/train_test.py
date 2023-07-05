@@ -51,6 +51,8 @@ def train():
 
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 
+    model.resize_token_embeddings(len(tokenizer))
+
     dataset = load_dataset(data_args.data_path, split='train')
 
     def tokenize_function(example_batch):
