@@ -132,3 +132,13 @@ cat ~/.ssh/arc_key.pub
 5. Enter Title and public Key that you copied earlier (exactly as it's shown in your terminal):
 
 6. Test the Connection (optional): You can test the connection to GitHub by using the following command in your terminal or command line interface. `ssh -T git@github.com`
+
+
+## Guide for Installing Git and Git LFS with Conda
+
+This sections will walk you through the steps to install Git and Git Large File Storage (LFS) using Conda. ARC has git, but it is an older version. To make life easier, you can install git and git lfs with conda.
+
+```bash
+conda install -c anaconda git
+conda install -c conda-forge git-lfs
+```

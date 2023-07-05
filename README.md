@@ -10,8 +10,9 @@
 ## Creating Conda Environment
 Copy all text and paste into a notepad to edit the conda environment path, then paste everything into your terminal at once.
 ```bash
-conda create -p /zwe996/abc123/env python=3.8 -y && \
-conda activate /zwe996/abc123/env && \
+cd /work/abc123
+conda create -p ./env python=3.8 -y && \
+conda activate ./env && \
 conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y && \
 conda install -c conda-forge transformers -y && \
 conda install -c conda-forge sentencepiece -y && \
@@ -24,7 +25,5 @@ pip install xformers
 ```
 
 ## Running Code Interactively
-
-
 
 
