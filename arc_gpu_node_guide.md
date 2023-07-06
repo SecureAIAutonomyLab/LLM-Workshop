@@ -42,9 +42,17 @@ nano ~./bashrc
 
 2. Scroll down to the bottom of the file and add the following lines:
 ```bash
-export CONDA_PKGS_DIRS=/work/abc123/.conda/pkgs
-export HF_HOME=/work/abc123/.cache
-export TORCH_EXTENSIONS_DIR=/work/abc123/.cache
+export PATH=/apps/gcc/9.3.0/bin:$PATH
+export LD_LIBRARY_PATH=/apps/gcc/9.3.0/lib64:$LD_LIBRARY_PATH
+export CONDA_PKGS_DIRS=/work/zwe996/.conda/pkgs
+export HF_HOME=/work/zwe996/.cache
+export TORCH_EXTENSIONS_DIR=/work/zwe996/.cache
+export LD_LIBRARY_PATH=/work/zwe996/env/lib:$LD_LIBRARY_PATH
+export PYTHONNOUSERSITE=1
+export PIP_CACHE_DIR=/work/zwe996/.cache
+export PATH=/usr/local/cuda/bin:$PATH
+export CC=/apps/gcc/9.3.0/bin/gcc
+export CXX=/apps/gcc/9.3.0/bin/g++
 ```
 3. Press Ctrl + X, then press Y, and finally press Enter to save the changes and exit the editor.
 

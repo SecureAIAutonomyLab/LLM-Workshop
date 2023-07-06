@@ -5,8 +5,8 @@ from dataclasses import dataclass, field
 from typing import Optional
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="deepspeed")
-import deepspeed
-deepspeed.ops.op_builder.CPUAdamBuilder().load() # needed for now, will be fixed in the future
+# import deepspeed
+# deepspeed.ops.op_builder.CPUAdamBuilder().load() # needed for now, will be fixed in the future
 
 DEFAULT_PAD_TOKEN = "[PAD]"
 DEFAULT_EOS_TOKEN = "</s>"

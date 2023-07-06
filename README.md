@@ -12,19 +12,18 @@
 Copy all text and paste into your terminal at once (after changing to work directory).
 ```bash
 cd /work/abc123
+module load gcc/9.3.0 && \
+module load cuda/toolkit/11.3 && \
 conda create -p ./env python=3.8 -y && \
 conda activate ./env && \
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y && \
-conda install -c conda-forge transformers -y && \
-conda install -c conda-forge sentencepiece -y && \
-conda install -c conda-forge datasets -y && \
-conda install libgcc -y && \
-conda install -c conda-forge cxx-compiler -y && \
-conda install -c conda-forge accelerate -y && \
+conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch -y && \
 conda install -c anaconda git -y && \
 conda install -c conda-forge git-lfs -y && \
-pip install deepspeed && \
-pip install xformers
+pip install transformers && \
+pip install sentencepiece && \
+pip install datasets && \
+pip install accelerate && \
+pip install deepspeed
 ```
 
 # Cloning Code
