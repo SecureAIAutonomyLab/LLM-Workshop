@@ -4,10 +4,12 @@ from transformers import Trainer, DataCollatorForLanguageModeling
 from dataclasses import dataclass, field
 from typing import Optional
 
+
 DEFAULT_PAD_TOKEN = "[PAD]"
 DEFAULT_EOS_TOKEN = "</s>"
 DEFAULT_BOS_TOKEN = "<s>"
 DEFAULT_UNK_TOKEN = "<unk>"
+
 
 @dataclass
 class ModelArguments:
@@ -37,6 +39,12 @@ def train():
 
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
+
+    dataset = load_dataset(data_args.data_path, split='train')
+
+    def tokenize_function(example_batch):
+        return tokenizer(example_batch['text'], truncation=True, max_length=512)
+
     model = transformers.AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path
     )
@@ -52,11 +60,6 @@ def train():
 
     model.resize_token_embeddings(len(tokenizer))
 
-    dataset = load_dataset(data_args.data_path, split='train')
-
-    def tokenize_function(example_batch):
-        return tokenizer(example_batch['text'], truncation=True, max_length=512)
-
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
     data_collator = DataCollatorForLanguageModeling(
@@ -66,7 +69,7 @@ def train():
     trainer = Trainer(model=model, tokenizer=tokenizer,
                       args=training_args, train_dataset=tokenized_dataset,
                       data_collator=data_collator)
-    
+
     trainer.train()
     trainer.save_state()
     trainer.save_model(output_dir=training_args.output_dir)
