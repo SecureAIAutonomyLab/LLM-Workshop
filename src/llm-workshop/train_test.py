@@ -1,6 +1,6 @@
 from datasets import load_dataset
 import transformers
-from transformers import Trainer
+from transformers import Trainer, DataCollatorForLanguageModeling
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -59,9 +59,14 @@ def train():
 
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
-    trainer = Trainer(model=model, tokenizer=tokenizer,
-                      args=training_args, train_dataset=tokenized_dataset)
+    data_collator = DataCollatorForLanguageModeling(
+        tokenizer=tokenizer, mlm=False,
+    )
 
+    trainer = Trainer(model=model, tokenizer=tokenizer,
+                      args=training_args, train_dataset=tokenized_dataset,
+                      data_collator=data_collator)
+    
     trainer.train()
     trainer.save_state()
     trainer.save_model(output_dir=training_args.output_dir)
