@@ -46,7 +46,6 @@ def train():
 
     model = transformers.AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
-        device_map='Auto',
         use_cache=False
     )
 
