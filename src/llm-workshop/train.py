@@ -3,6 +3,8 @@ import transformers
 from transformers import Trainer, DataCollatorForLanguageModeling
 from dataclasses import dataclass, field
 from typing import Optional
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="deepspeed")
 
 
 DEFAULT_PAD_TOKEN = "[PAD]"
