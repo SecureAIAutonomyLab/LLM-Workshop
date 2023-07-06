@@ -8,7 +8,7 @@
 
 
 ## Creating Conda Environment
-Copy all text and paste into a notepad to edit the conda environment path, then paste everything into your terminal at once.
+Copy all text and paste into your terminal at once (after changing to work directory).
 ```bash
 cd /work/abc123
 conda create -p ./env python=3.8 -y && \
@@ -26,4 +26,7 @@ pip install xformers
 
 ## Running Code Interactively
 
-
+Grab a GPU Node
+```bash
+srun -p gpu1v100 -n 1 -t 01:00:00 -c 40 --pty bash
+```

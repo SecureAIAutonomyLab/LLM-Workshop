@@ -3,8 +3,8 @@
 export TRANSFORMERS_VERBOSITY=info
 export DS_SKIP_CUDA_CHECK=0
 
-torchrun --nproc_per_node=1 --master_port=2345 ../src/llm-workshop/train.py \
-    --model_name_or_path ../llama-7b-hf \
+torchrun --nproc_per_node=2 --master_port=2345 ../src/llm-workshop/train.py \
+    --model_name_or_path psmathur/orca_mini_3b \
     --data_path vicgalle/alpaca-gpt4 \
     --output_dir ../training_output \
     --num_train_epochs 1 \
