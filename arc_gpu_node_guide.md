@@ -81,7 +81,7 @@ srun -p gpu1v100 -n 1 -t 01:00:00 -c 40 --pty bash
 https://hpcsupport.utsa.edu/foswiki/bin/view/ARC/WebHome
 
 
-# Guide to Setting Up SSH Keys for GitHub on HPC Environment (ARC)
+# Guide to Setting Up SSH Keys for GitHub Authentication on HPC Environment (Needed for Private Repos)
 
 This guide assumes that you are already logged into the HPC environment and will walk you through generating an SSH key, configuring SSH to use this key for GitHub, and adding the key to your GitHub account.
 
@@ -134,7 +134,7 @@ cat ~/.ssh/arc_key.pub
 6. Test the Connection (optional): You can test the connection to GitHub by using the following command in your terminal or command line interface. `ssh -T git@github.com`
 
 
-## Guide for Installing Git and Git LFS with Conda
+# Guide for Installing Git and Git LFS with Conda
 
 This sections will walk you through the steps to install Git and Git Large File Storage (LFS) using Conda. ARC has git, but it is an older version. To make life easier, you can install git and git lfs with conda.
 
@@ -142,3 +142,4 @@ This sections will walk you through the steps to install Git and Git Large File 
 conda install -c anaconda git
 conda install -c conda-forge git-lfs
 ```
+(Make sure your environment is activated before installing)
