@@ -42,14 +42,19 @@ nano ~./bashrc
 
 2. Scroll down to the bottom of the file and add the following lines:
 ```bash
+# ARC has an old system gcc version, need to load in gcc<=10.0 for DeepSpeed JIT Compilation
+# Some of these may not be needed for your use case, but I would add them just in case
+COMMON_PATH_PREFIX="/work/abc123"
+
+module load gcc/9.3.0
 export PATH=/apps/gcc/9.3.0/bin:$PATH
 export LD_LIBRARY_PATH=/apps/gcc/9.3.0/lib64:$LD_LIBRARY_PATH
-export CONDA_PKGS_DIRS=/work/zwe996/.conda/pkgs
-export HF_HOME=/work/zwe996/.cache
-export TORCH_EXTENSIONS_DIR=/work/zwe996/.cache
-export LD_LIBRARY_PATH=/work/zwe996/env/lib:$LD_LIBRARY_PATH
+export CONDA_PKGS_DIRS=$COMMON_PATH_PREFIX/.conda/pkgs
+export HF_HOME=$COMMON_PATH_PREFIX/.cache
+export TORCH_EXTENSIONS_DIR=$COMMON_PATH_PREFIX/.cache
+export LD_LIBRARY_PATH=$COMMON_PATH_PREFIX/env/lib:$LD_LIBRARY_PATH
 export PYTHONNOUSERSITE=1
-export PIP_CACHE_DIR=/work/zwe996/.cache
+export PIP_CACHE_DIR=$COMMON_PATH_PREFIX/.cache
 export PATH=/usr/local/cuda/bin:$PATH
 export CC=/apps/gcc/9.3.0/bin/gcc
 export CXX=/apps/gcc/9.3.0/bin/g++

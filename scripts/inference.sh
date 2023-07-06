@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python ../src/llm-workshop/inference.py --model_dir ../training_output/checkpoint-1218/
+python ../src/llm-workshop/inference.py --model_dir psmathur/orca_mini_3b
 
