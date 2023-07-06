@@ -2,9 +2,9 @@
 
 export TRANSFORMERS_VERBOSITY=info
 
-torchrun --nproc_per_node=4 --master_port=2345 ../src/deepspeed/train.py \
+torchrun --nproc_per_node=8 --master_port=2345 ../src/llm-workshop/train.py \
     --model_name_or_path ../llama-7b-hf \
-    --data_path ../data/alpaca_gpt4_data.json \
+    --data_path vicgalle/alpaca-gpt4 \
     --output_dir ../training_output \
     --num_train_epochs 3 \
     --per_device_train_batch_size 4 \

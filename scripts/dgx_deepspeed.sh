@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-torchrun --nproc_per_node=8 --master_port=2345 ../src/llm-workshop/train_test.py \
+torchrun --nproc_per_node=8 --master_port=2345 ../src/llm-workshop/train.py \
     --model_name_or_path ../llama-7b-hf \
     --data_path vicgalle/alpaca-gpt4 \
     --output_dir ../training_output1 \
