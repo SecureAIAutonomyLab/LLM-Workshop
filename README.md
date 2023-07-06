@@ -23,7 +23,8 @@ pip install transformers && \
 pip install sentencepiece && \
 pip install datasets && \
 pip install accelerate && \
-pip install deepspeed
+pip install deepspeed && \
+pip install protobuf==3.20
 
 ```
 
