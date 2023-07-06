@@ -54,6 +54,13 @@ def train():
         model_args.model_name_or_path
     )
 
+    print("pad_token:", tokenizer.pad_token)
+    print("bos_token:", tokenizer.bos_token)
+    print("eos_token:", tokenizer.eos_token)
+    print("pad_token_id:", tokenizer.pad_token_id)
+    print("bos_token_id:", tokenizer.bos_token_id)
+    print("eos_token_id:", tokenizer.eos_token_id)
+
     tokenizer.add_special_tokens({'pad_token': DEFAULT_PAD_TOKEN})
     tokenizer.add_special_tokens({'eos_token': DEFAULT_EOS_TOKEN})
     tokenizer.add_special_tokens({'bos_token': DEFAULT_BOS_TOKEN})
