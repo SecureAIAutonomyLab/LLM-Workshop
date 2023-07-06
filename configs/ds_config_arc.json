@@ -31,7 +31,7 @@
     },
     "optimizer": {
         "type": "Adam",
-        "adamw_mode": true,
+        "adamw_mode": false,
         "params": {
             "lr": "auto",
             "betas": "auto",
