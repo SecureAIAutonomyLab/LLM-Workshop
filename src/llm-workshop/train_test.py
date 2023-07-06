@@ -55,7 +55,7 @@ def train():
     dataset = load_dataset(data_args.data_path, split='train')
 
     def tokenize_function(example_batch):
-        return tokenizer(example_batch['text'], truncation=True, padding='max_length', max_length=512)
+        return tokenizer(example_batch['text'], truncation=True, max_length=512)
 
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
