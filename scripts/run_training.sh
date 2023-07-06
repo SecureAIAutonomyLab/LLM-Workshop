@@ -3,14 +3,14 @@
 export TRANSFORMERS_VERBOSITY=info
 export DS_SKIP_CUDA_CHECK=0
 
-torchrun --nproc_per_node=8 --master_port=2345 ../src/llm-workshop/train.py \
+torchrun --nproc_per_node=4 --master_port=2345 ../src/llm-workshop/train.py \
     --model_name_or_path ../llama-7b-hf \
     --data_path vicgalle/alpaca-gpt4 \
     --output_dir ../training_output \
     --num_train_epochs 1 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
-    --gradient_accumulation_steps 8 \
+    --per_device_train_batch_size 2 \
+    --per_device_eval_batch_size 2 \
+    --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "epoch" \
     --save_total_limit 1 \
