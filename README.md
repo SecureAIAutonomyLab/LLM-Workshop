@@ -2,12 +2,13 @@
 
 ## Table of Contents
 
-- [Creating Conda Environment](#)
-- [Running Code Interactively](#installation)
-- [Running Code with Slurm Script](#run-training-job-with-slurm-script)
+- [Creating Conda Environment](#creating-conda-environment)
+- [Cloning Code](#cloning-code)
+- [Running Code Interactively](#running-code-interactively)
+- [Running Code with Slurm Script](#or-running-code-as-a-batch-job-preferred-for-longer-jobs)
 
 
-## Creating Conda Environment
+# Creating Conda Environment
 Copy all text and paste into your terminal at once (after changing to work directory).
 ```bash
 cd /work/abc123
@@ -20,13 +21,54 @@ conda install -c conda-forge datasets -y && \
 conda install libgcc -y && \
 conda install -c conda-forge cxx-compiler -y && \
 conda install -c conda-forge accelerate -y && \
+conda install -c anaconda git -y && \
+conda install -c conda-forge git-lfs -y && \
 pip install deepspeed && \
 pip install xformers
 ```
 
-## Running Code Interactively
+# Cloning Code
 
-Grab a GPU Node
+Since this is a private repo, make sure to check out [SSH keygen with Git](./arc_gpu_node_guide.md#guide-to-setting-up-ssh-keys-for-github-authentication-on-hpc-environment-needed-for-private-repos) if you have not already. After setting up SSH access to git, you can now clone the private repo.
+
 ```bash
-srun -p gpu1v100 -n 1 -t 01:00:00 -c 40 --pty bash
+git clone git@github.com:SecureAIAutonomyLab/LLM-Workshop.git
+cd LLM-Workshop
+```
+
+
+# Running Code Interactively
+
+Grab a GPU Node (If you haven't already). You have to reactivate your conda environment when you switch to a compute node.
+```bash
+srun -p gpu2v100 -n 1 -t 02:00:00 -c 40 --pty bash
+conda activate ./env
+cd scripts
+# configure script to your needs
+bash run_training.sh
+```
+
+# Or Running Code as a batch job (preferred for longer jobs)
+
+After adjusting the [slurm script](./scripts/arc_job_training.slurm) in the scripts folder. You can now run it with sbatch. (Note, you do not need to grab any nodes when using `sbatch`)
+```bash
+cd scripts
+sbatch arc_job_training.slurm
+```
+
+You can check the status of the job
+```bash
+squeue -u abc123
+```
+
+If you want to attach to that gpu node while it is running to check nvidia-smi, or check the progress of the job.
+```bash
+# gpu node name is shown by doing squeue -u abc123
+ssh <gpu_node_name>
+```
+
+You can also see the current output of the job by doing:
+```bash
+# Control - C to exit
+tail -f /work/zwe996/arc_training_job_%j.out
 ```
