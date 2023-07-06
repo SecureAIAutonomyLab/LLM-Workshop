@@ -4,6 +4,10 @@ from transformers import Trainer
 from dataclasses import dataclass, field
 from typing import Optional
 
+DEFAULT_PAD_TOKEN = "[PAD]"
+DEFAULT_EOS_TOKEN = "</s>"
+DEFAULT_BOS_TOKEN = "<s>"
+DEFAULT_UNK_TOKEN = "<unk>"
 
 @dataclass
 class ModelArguments:
@@ -41,9 +45,12 @@ def train():
         model_args.model_name_or_path
     )
 
-    # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    tokenizer.add_special_tokens({'pad_token': DEFAULT_PAD_TOKEN})
+    tokenizer.add_special_tokens({'eos_token': DEFAULT_EOS_TOKEN})
+    tokenizer.add_special_tokens({'bos_token': DEFAULT_BOS_TOKEN})
+    tokenizer.add_special_tokens({'unk_token': DEFAULT_UNK_TOKEN})
 
-    # model.resize_token_embeddings(len(tokenizer))
+    model.resize_token_embeddings(len(tokenizer))
 
     dataset = load_dataset(data_args.data_path, split='train')
 
