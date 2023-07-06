@@ -39,14 +39,15 @@ def train():
 
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
-
     dataset = load_dataset(data_args.data_path, split='train')
 
     def tokenize_function(example_batch):
-        return tokenizer(example_batch['text'], truncation=True, max_length=512)
+        return tokenizer(example_batch['text'], truncation=True, max_length=512, padding='max_length')
 
     model = transformers.AutoModelForCausalLM.from_pretrained(
-        model_args.model_name_or_path
+        model_args.model_name_or_path,
+        device_map='Auto',
+        use_cache=False
     )
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(
