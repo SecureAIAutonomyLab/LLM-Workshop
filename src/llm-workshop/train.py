@@ -50,7 +50,8 @@ def train():
     )
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(
-        model_args.model_name_or_path
+        model_args.model_name_or_path,
+        use_fast=False
     )
 
     tokenizer.add_special_tokens({'pad_token': DEFAULT_PAD_TOKEN})
