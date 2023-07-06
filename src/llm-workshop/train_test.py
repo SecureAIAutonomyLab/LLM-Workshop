@@ -34,27 +34,18 @@ def train():
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
     model = transformers.AutoModelForCausalLM.from_pretrained(
-        model_args.model_name_or_path,
-        cache_dir=training_args.cache_dir,
-        use_cache=False
+        model_args.model_name_or_path
     )
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(
-        model_args.model_name_or_path,
-        cache_dir=training_args.cache_dir,
-        model_max_length=training_args.model_max_length,
-        padding_side="right",
-        use_fast=False,
+        model_args.model_name_or_path
     )
 
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 
-    model.resize_token_embeddings(len(tokenizer))
+    # model.resize_token_embeddings(len(tokenizer))
 
     dataset = load_dataset(data_args.data_path, split='train')
-
-    print(dataset[0])
-
 
     def tokenize_function(example_batch):
         return tokenizer(example_batch['text'], truncation=True, padding='max_length', max_length=512)
