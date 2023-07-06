@@ -60,11 +60,11 @@ def train():
 
     model.resize_token_embeddings(len(tokenizer))
 
-    tokenized_dataset = dataset.map(tokenize_function, batched=True)
-
     data_collator = DataCollatorForLanguageModeling(
         tokenizer=tokenizer, mlm=False,
     )
+
+    tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
     trainer = Trainer(model=model, tokenizer=tokenizer,
                       args=training_args, train_dataset=tokenized_dataset,
