@@ -37,7 +37,7 @@ To ensure that these settings are automatically applied every time you log in, y
 
 1. Open your .bashrc file with the nano text editor:
 ```bash
-nano ~./bashrc
+nano ~/.bashrc
 ```
 
 2. Scroll down to the bottom of the file and add the following lines:
