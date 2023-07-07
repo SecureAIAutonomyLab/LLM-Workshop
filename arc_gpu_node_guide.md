@@ -98,7 +98,7 @@ https://hpcsupport.utsa.edu/foswiki/bin/view/ARC/WebHome
 
 This guide assumes that you are already logged into the HPC environment and will walk you through generating an SSH key, configuring SSH to use this key for GitHub, and adding the key to your GitHub account.
 
-### Step 1: Generate an SSH Key on ARC
+### Step 1: Generate a SSH Key on ARC
 
 Generate a new SSH key with the name "arc_key" by running the following command:
 
