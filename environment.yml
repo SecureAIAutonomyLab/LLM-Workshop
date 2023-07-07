@@ -19,7 +19,3 @@ dependencies:
     - accelerate
     - deepspeed
     - protobuf==3.20
-
-  - pip:
-      - mpmath==1.2.1
-prefix: /home/brandon26/miniconda/envs/env
