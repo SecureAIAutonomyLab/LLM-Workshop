@@ -9,11 +9,14 @@
 
 
 # Creating Conda Environment
-Copy all text and paste into your terminal at once (after changing to work directory).
+Copy all text and paste into your terminal at once (after changing to work directory). Note that you can also create the environment from `environment.yml`. Just make sure to do the module load if you are on ARC (and haven't already added it to your ~/.bashrc). 
+Make sure to change abc123 to your id.
 ```bash
-# Note, you can add also add `module load gcc/9.3.0` to your ~./bashrc
 cd /work/abc123
-module load gcc/9.3.0 && \
+module load gcc/9.3.0
+```
+
+```bash
 conda create -p ./env python=3.8 -y && \
 conda activate ./env && \
 conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y && \
