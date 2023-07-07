@@ -71,5 +71,5 @@ ssh <gpu_node_name>
 You can also see the current output of the job by doing:
 ```bash
 # Control - C to exit
-tail -f /work/zwe996/arc_training_job_%j.out
+tail -f /work/abc123/arc_training_job_%j.out
 ```
